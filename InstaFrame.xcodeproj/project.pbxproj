@@ -7,18 +7,33 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA63B9762C7F1D56000E5714 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA63B9752C7F1D56000E5714 /* EditView.swift */; };
+		DA63B9792C810343000E5714 /* ColorfulX in Frameworks */ = {isa = PBXBuildFile; productRef = DA63B9782C810343000E5714 /* ColorfulX */; };
+		DA63B97B2C81081E000E5714 /* CustomPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */; };
 		DA7D257C2C7874F8008590B0 /* InstaFrameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D257B2C7874F8008590B0 /* InstaFrameApp.swift */; };
 		DA7D257E2C7874F8008590B0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D257D2C7874F8008590B0 /* ContentView.swift */; };
 		DA7D25802C7874F9008590B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA7D257F2C7874F9008590B0 /* Assets.xcassets */; };
 		DA7D25832C7874F9008590B0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA7D25822C7874F9008590B0 /* Preview Assets.xcassets */; };
+		DA7D258D2C7879F2008590B0 /* image-saver.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D25892C7879F2008590B0 /* image-saver.swift */; };
+		DA7D258E2C7879F2008590B0 /* image-picker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D258A2C7879F2008590B0 /* image-picker.swift */; };
+		DA7D258F2C7879F2008590B0 /* instagram-size.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D258B2C7879F2008590B0 /* instagram-size.swift */; };
+		DA7D25902C7879F2008590B0 /* preview-image.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D258C2C7879F2008590B0 /* preview-image.swift */; };
+		DA7D25942C787CC5008590B0 /* multiple-image-picker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D25932C787CC5008590B0 /* multiple-image-picker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DA63B9752C7F1D56000E5714 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
+		DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPickerViewController.swift; sourceTree = "<group>"; };
 		DA7D25782C7874F8008590B0 /* InstaFrame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstaFrame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA7D257B2C7874F8008590B0 /* InstaFrameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstaFrameApp.swift; sourceTree = "<group>"; };
 		DA7D257D2C7874F8008590B0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DA7D257F2C7874F9008590B0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DA7D25822C7874F9008590B0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		DA7D25892C7879F2008590B0 /* image-saver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "image-saver.swift"; sourceTree = "<group>"; };
+		DA7D258A2C7879F2008590B0 /* image-picker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "image-picker.swift"; sourceTree = "<group>"; };
+		DA7D258B2C7879F2008590B0 /* instagram-size.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "instagram-size.swift"; sourceTree = "<group>"; };
+		DA7D258C2C7879F2008590B0 /* preview-image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "preview-image.swift"; sourceTree = "<group>"; };
+		DA7D25932C787CC5008590B0 /* multiple-image-picker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "multiple-image-picker.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA63B9792C810343000E5714 /* ColorfulX in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -51,10 +67,17 @@
 		DA7D257A2C7874F8008590B0 /* InstaFrame */ = {
 			isa = PBXGroup;
 			children = (
+				DA63B9752C7F1D56000E5714 /* EditView.swift */,
+				DA7D258A2C7879F2008590B0 /* image-picker.swift */,
+				DA7D25892C7879F2008590B0 /* image-saver.swift */,
+				DA7D258B2C7879F2008590B0 /* instagram-size.swift */,
+				DA7D258C2C7879F2008590B0 /* preview-image.swift */,
 				DA7D257B2C7874F8008590B0 /* InstaFrameApp.swift */,
 				DA7D257D2C7874F8008590B0 /* ContentView.swift */,
+				DA7D25932C787CC5008590B0 /* multiple-image-picker.swift */,
 				DA7D257F2C7874F9008590B0 /* Assets.xcassets */,
 				DA7D25812C7874F9008590B0 /* Preview Content */,
+				DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */,
 			);
 			path = InstaFrame;
 			sourceTree = "<group>";
@@ -83,6 +106,9 @@
 			dependencies = (
 			);
 			name = InstaFrame;
+			packageProductDependencies = (
+				DA63B9782C810343000E5714 /* ColorfulX */,
+			);
 			productName = InstaFrame;
 			productReference = DA7D25782C7874F8008590B0 /* InstaFrame.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +137,9 @@
 				Base,
 			);
 			mainGroup = DA7D256F2C7874F8008590B0;
+			packageReferences = (
+				DA63B9772C810343000E5714 /* XCRemoteSwiftPackageReference "ColorfulX" */,
+			);
 			productRefGroup = DA7D25792C7874F8008590B0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -138,7 +167,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA7D257E2C7874F8008590B0 /* ContentView.swift in Sources */,
+				DA7D258D2C7879F2008590B0 /* image-saver.swift in Sources */,
+				DA63B9762C7F1D56000E5714 /* EditView.swift in Sources */,
+				DA7D25902C7879F2008590B0 /* preview-image.swift in Sources */,
+				DA63B97B2C81081E000E5714 /* CustomPickerViewController.swift in Sources */,
+				DA7D258F2C7879F2008590B0 /* instagram-size.swift in Sources */,
+				DA7D25942C787CC5008590B0 /* multiple-image-picker.swift in Sources */,
 				DA7D257C2C7874F8008590B0 /* InstaFrameApp.swift in Sources */,
+				DA7D258E2C7879F2008590B0 /* image-picker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,6 +311,8 @@
 				DEVELOPMENT_TEAM = X7HH2BJNVL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app needs permission to save the processed images to your photo library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs access to your photo library to save the processed images with borders.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -304,6 +342,8 @@
 				DEVELOPMENT_TEAM = X7HH2BJNVL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app needs permission to save the processed images to your photo library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs access to your photo library to save the processed images with borders.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -344,6 +384,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DA63B9772C810343000E5714 /* XCRemoteSwiftPackageReference "ColorfulX" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Lakr233/ColorfulX";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DA63B9782C810343000E5714 /* ColorfulX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA63B9772C810343000E5714 /* XCRemoteSwiftPackageReference "ColorfulX" */;
+			productName = ColorfulX;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DA7D25702C7874F8008590B0 /* Project object */;
 }
