@@ -3,21 +3,22 @@ import Photos
 import ColorfulX
 
 struct EditView: View {
-    @Binding var images: [UIImage]
+    @Binding var imageAssets: [PHAsset]
     @State private var borderColor: Color = .white
     @State private var borderThickness: CGFloat = 20
     @State private var selectedSize: InstagramSize = .square
-    @State private var processedImages: [UIImage] = []
+    @State private var processedImages: [Int: UIImage] = [:]
+    @State private var originalImages: [Int: UIImage] = [:]
     @State private var isProcessing = false
     @State private var showingAlert = false
     @State private var alertMessage = ""
-    @State private var removingIndices: Set<Int> = []
+    @State private var selectedImageIndex: Int = 0
     @Environment(\.presentationMode) var presentationMode
     
-    // ColorfulX properties
+    // ColorfulX properties (unchanged)
     let customColors: [Color] = [
-        Color(red: 0.0039, green: 0.0471, blue: 0.2471), /* #010c3f */
-        Color(red: 0.1882, green: 0.2706, blue: 0.4), /* #304566 */
+        Color(red: 0.0039, green: 0.0471, blue: 0.2471),
+        Color(red: 0.1882, green: 0.2706, blue: 0.4),
         Color(red: 0.3725, green: 0.4824, blue: 0.5373),
         Color(red: 0.0314, green: 0.1608, blue: 0.3176),
         Color(red: 0.2824, green: 0.6, blue: 0.7098)
@@ -34,134 +35,127 @@ struct EditView: View {
                 ColorfulView(color: $colors, speed: $speed, noise: $noise)
                     .edgesIgnoringSafeArea(.all)
                 
-                ScrollView {
-                    VStack(spacing: 20) {
-                        if images.isEmpty {
-                            Text("No images remaining")
-                                .foregroundColor(.secondary)
-                                .padding()
-                        } else {
-                            VStack {
-                                Picker("Image Size", selection: $selectedSize) {
-                                    ForEach(InstagramSize.allCases) { size in
-                                        Text(size.rawValue).tag(size)
-                                    }
-                                }
-                                .pickerStyle(SegmentedPickerStyle())
+                VStack {
+                    if imageAssets.isEmpty {
+                        Text("No images remaining")
+                            .foregroundColor(.secondary)
+                            .padding()
+                    } else {
+                        VStack{
+                            Button(action: { deleteImage(at: selectedImageIndex) }) {
+                                Text("Remove Current Image")
+                                    .foregroundColor(.red)
+                                    .padding(.vertical, 5)
+                                    .padding(.horizontal, 10)
+                                    .background(Color.clear)
+                                    .cornerRadius(5)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color.red, lineWidth: 1)
+                                    )
                             }
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 20) {
-                                    ForEach(Array(images.enumerated()), id: \.offset) { index, image in
-                                        VStack {
-                                            Image(uiImage: processedImages.count > index ? processedImages[index] : image)
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 200, height: 300)
-                                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                                .shadow(radius: 5)
-                                            
-                                            Button(action: {
-                                                withAnimation(.easeInOut(duration: 0.3)) {
-                                                    removingIndices.insert(index)
-                                                }
-                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                                    deleteImage(at: index)
-                                                    removingIndices.remove(index)
-                                                }
-                                            }) {
-                                                Text("Remove")
-                                                    .foregroundColor(.red)
-                                                    .padding(.vertical, 5)
-                                                    .padding(.horizontal, 10)
-                                                    .background(Color.white)
-                                                    .cornerRadius(5)
-                                                    .overlay(
-                                                        RoundedRectangle(cornerRadius: 5)
-                                                            .stroke(Color.red, lineWidth: 1)
-                                                    )
-                                            }
-                                            .padding(.top, 5)
-                                            .scaleEffect(removingIndices.contains(index) ? 0.8 : 1)
-                                            .opacity(removingIndices.contains(index) ? 0 : 1)
-                                        }
-                                    }
-                                }
-                                .padding(.horizontal)
+                        }
+                        // Image slider
+                        TabView(selection: $selectedImageIndex) {
+                            ForEach(Array(imageAssets.enumerated()), id: \.offset) { index, asset in
+                                ImageView(processedImage: processedImages[index])
+                                    .tag(index)
                             }
-                            .frame(height: 360)
-
+                        }
+                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+                        .onChange(of: selectedImageIndex) { _ in
+                            updateCurrentImage()
+                        }
+                        
+                        // Controls
+                        VStack(spacing: 20) {
+                            Picker("Image Size", selection: $selectedSize) {
+                                ForEach(InstagramSize.allCases) { size in
+                                    Text(size.rawValue).tag(size)
+                                }
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                            
                             ColorPicker("Border Color", selection: $borderColor)
                             
                             VStack {
                                 Text("Border Thickness: \(Int(borderThickness)) px")
                                 Slider(value: $borderThickness, in: 0...200, step: 1)
                             }
-
-                            if isProcessing {
-                                ProgressView()
-                            }
                         }
-                    }
-                    .padding()
-                }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: saveImagesToPhotos) {
-                            Image(systemName: "square.and.arrow.down")
-                        }
-                        .disabled(isProcessing || images.isEmpty)
-                    }
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Done") {
-                            presentationMode.wrappedValue.dismiss()
+                        .padding()
+                        
+                        if isProcessing {
+                            ProgressView()
                         }
                     }
                 }
+                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarBackButtonHidden(true)
+                .navigationBarItems(
+                    leading: Button("Done") { presentationMode.wrappedValue.dismiss() }
+                        .accentColor(.white),
+                    trailing: Button(action: saveImagesToPhotos) {
+                        Image(systemName: "square.and.arrow.down")
+                    }
+                        .accentColor(.white)
+                    .disabled(isProcessing || imageAssets.isEmpty)
+                )
             }
         }
         .onAppear {
-            updateProcessedImages()
+            loadOriginalImages()
         }
-        .onChange(of: borderColor) { _, _ in
-            updateProcessedImages()
-        }
-        .onChange(of: borderThickness) { _, _ in
-            updateProcessedImages()
-        }
-        .onChange(of: selectedSize) { _, _ in
-            updateProcessedImages()
-        }
-        .onChange(of: images) { newImages in
-            if newImages.isEmpty {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    presentationMode.wrappedValue.dismiss()
-                }
-            }
-        }
+        .onChange(of: borderColor) { _ in updateCurrentImage() }
+        .onChange(of: borderThickness) { _ in updateCurrentImage() }
+        .onChange(of: selectedSize) { _ in updateCurrentImage() }
         .alert(isPresented: $showingAlert) {
             Alert(title: Text("Save to Photos"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
     }
 
-    private func updateProcessedImages() {
-        isProcessing = true
-        DispatchQueue.global(qos: .userInitiated).async {
-            let newProcessedImages = images.map { image in
-                processAndAddBorder(to: image, color: UIColor(borderColor), thickness: borderThickness, size: selectedSize)
+    private func loadOriginalImages() {
+        for (index, asset) in imageAssets.enumerated() {
+            let options = PHImageRequestOptions()
+            options.deliveryMode = .highQualityFormat
+            options.isNetworkAccessAllowed = true
+            
+            PHImageManager.default().requestImage(for: asset, targetSize: CGSize(width: 1000, height: 1000), contentMode: .aspectFit, options: options) { image, _ in
+                guard let image = image else { return }
+                DispatchQueue.main.async {
+                    self.originalImages[index] = image
+                    self.updateCurrentImage()
+                }
             }
+        }
+    }
+
+    private func updateCurrentImage() {
+        guard let originalImage = originalImages[selectedImageIndex] else { return }
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            let processedImage = self.processAndAddBorder(to: originalImage, color: UIColor(self.borderColor), thickness: self.borderThickness, size: self.selectedSize)
             DispatchQueue.main.async {
-                processedImages = newProcessedImages
-                isProcessing = false
+                self.processedImages[self.selectedImageIndex] = processedImage
             }
         }
     }
     
     private func deleteImage(at index: Int) {
-        images.remove(at: index)
-        if processedImages.count > index {
-            processedImages.remove(at: index)
+        guard index < imageAssets.count else { return }
+        imageAssets.remove(at: index)
+        processedImages.removeValue(forKey: index)
+        originalImages.removeValue(forKey: index)
+        
+        // Shift the remaining processed images
+        for i in index..<imageAssets.count {
+            processedImages[i] = processedImages.removeValue(forKey: i + 1)
+            originalImages[i] = originalImages.removeValue(forKey: i + 1)
         }
-        updateProcessedImages()
+        
+        if selectedImageIndex >= imageAssets.count {
+            selectedImageIndex = max(imageAssets.count - 1, 0)
+        }
     }
 
     private func saveImagesToPhotos() {
@@ -169,7 +163,7 @@ struct EditView: View {
             DispatchQueue.main.async {
                 if status == .authorized {
                     var savedCount = 0
-                    for image in processedImages {
+                    for (_, image) in processedImages {
                         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
                         savedCount += 1
                     }
@@ -234,5 +228,25 @@ struct EditView: View {
             let aspectFit = AVMakeRect(aspectRatio: image.size, insideRect: imageRect)
             image.draw(in: aspectFit)
         }
+    }
+}
+
+struct ImageView: View {
+    let processedImage: UIImage?
+    
+    var body: some View {
+        Group {
+            if let processedImage = processedImage {
+                Image(uiImage: processedImage)
+                    .resizable()
+                    .scaledToFit()
+            } else {
+                ProgressView()
+            }
+        }
+        //.padding(.bottom, 30)
+        .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.35)
+        .background(Color.gray.opacity(0.0))
+        //.cornerRadius(10)
     }
 }

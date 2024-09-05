@@ -1,8 +1,11 @@
 import SwiftUI
 import ColorfulX
+import PhotosUI
+import Photos
 
 struct ContentView: View {
-    @State private var selectedImages: [UIImage] = []
+    @State private var selectedImageAssets: [PHAsset] = []
+    @State private var showingImagePicker = false
     @State private var showingEditView = false
     
     let customColors: [Color] = [
@@ -25,29 +28,24 @@ struct ContentView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                    if selectedImages.isEmpty {
+                    if selectedImageAssets.isEmpty {
                         Text("No images selected")
                             .foregroundColor(.white)
                             .padding()
                     } else {
-                        Text("\(selectedImages.count) images selected")
+                        Text("\(selectedImageAssets.count) images selected")
                             .foregroundColor(.white)
                             .padding()
                     }
                     
-                    NavigationLink {
-                        ImagePicker(images: $selectedImages)
-                    } label: {
+                    Button(action: {
+                        showingImagePicker = true
+                    }) {
                         Label("Select Images", systemImage: "photo.on.rectangle.angled")
                     }
                     .buttonStyle(.bordered)
                     .foregroundColor(.white)
                     .padding()
-                    
-                    NavigationLink(value: selectedImages) {
-                        EmptyView()
-                    }
-                    .hidden()
                 }
             }
             .navigationTitle("InstaFrame")
@@ -59,13 +57,17 @@ struct ContentView: View {
                         .font(.largeTitle)
                 }
             }
-            .navigationDestination(isPresented: $showingEditView) {
-                EditView(images: $selectedImages)
+            .accentColor(.red)
+            .sheet(isPresented: $showingImagePicker) {
+                ImagePicker(assets: $selectedImageAssets)
             }
-        }
-        .onChange(of: selectedImages) { newValue in
-            if !newValue.isEmpty {
-                showingEditView = true
+            .onChange(of: selectedImageAssets) { _, newValue in
+                if !newValue.isEmpty {
+                    showingEditView = true
+                }
+            }
+            .navigationDestination(isPresented: $showingEditView) {
+                EditView(imageAssets: $selectedImageAssets)
             }
         }
     }

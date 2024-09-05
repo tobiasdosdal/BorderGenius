@@ -2,15 +2,19 @@ import SwiftUI
 import PhotosUI
 
 struct ImagePicker: UIViewControllerRepresentable {
-    @Binding var images: [UIImage]
+    @Binding var assets: [PHAsset]
     
-    func makeUIViewController(context: Context) -> CustomPickerViewController {
-        let picker = CustomPickerViewController()
+    func makeUIViewController(context: Context) -> PHPickerViewController {
+        var config = PHPickerConfiguration(photoLibrary: .shared())
+        config.selectionLimit = 0  // 0 means no limit
+        config.filter = .images
+        
+        let picker = PHPickerViewController(configuration: config)
         picker.delegate = context.coordinator
         return picker
     }
     
-    func updateUIViewController(_ uiViewController: CustomPickerViewController, context: Context) {}
+    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {}
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -26,21 +30,11 @@ struct ImagePicker: UIViewControllerRepresentable {
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             picker.dismiss(animated: true)
             
-            let group = DispatchGroup()
-            var newImages: [UIImage] = []
+            let identifiers = results.compactMap(\.assetIdentifier)
+            let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers, options: nil)
             
-            for result in results {
-                group.enter()
-                result.itemProvider.loadObject(ofClass: UIImage.self) { (object, error) in
-                    defer { group.leave() }
-                    if let image = object as? UIImage {
-                        newImages.append(image)
-                    }
-                }
-            }
-            
-            group.notify(queue: .main) {
-                self.parent.images.append(contentsOf: newImages)
+            DispatchQueue.main.async {
+                self.parent.assets = fetchResult.objects(at: IndexSet(0..<fetchResult.count))
             }
         }
     }
