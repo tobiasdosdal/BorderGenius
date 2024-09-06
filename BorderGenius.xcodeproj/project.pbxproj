@@ -24,7 +24,7 @@
 /* Begin PBXFileReference section */
 		DA63B9752C7F1D56000E5714 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPickerViewController.swift; sourceTree = "<group>"; };
-		DA7D25782C7874F8008590B0 /* InstaFrame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstaFrame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA7D25782C7874F8008590B0 /* BorderGenius.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BorderGenius.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA7D257B2C7874F8008590B0 /* InstaFrameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstaFrameApp.swift; sourceTree = "<group>"; };
 		DA7D257D2C7874F8008590B0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DA7D257F2C7874F9008590B0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -51,7 +51,7 @@
 		DA7D256F2C7874F8008590B0 = {
 			isa = PBXGroup;
 			children = (
-				DA7D257A2C7874F8008590B0 /* InstaFrame */,
+				DA7D257A2C7874F8008590B0 /* BorderGenius */,
 				DA7D25792C7874F8008590B0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,12 +59,12 @@
 		DA7D25792C7874F8008590B0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DA7D25782C7874F8008590B0 /* InstaFrame.app */,
+				DA7D25782C7874F8008590B0 /* BorderGenius.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		DA7D257A2C7874F8008590B0 /* InstaFrame */ = {
+		DA7D257A2C7874F8008590B0 /* BorderGenius */ = {
 			isa = PBXGroup;
 			children = (
 				DA63B9752C7F1D56000E5714 /* EditView.swift */,
@@ -79,7 +79,7 @@
 				DA7D25812C7874F9008590B0 /* Preview Content */,
 				DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */,
 			);
-			path = InstaFrame;
+			path = BorderGenius;
 			sourceTree = "<group>";
 		};
 		DA7D25812C7874F9008590B0 /* Preview Content */ = {
@@ -93,9 +93,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		DA7D25772C7874F8008590B0 /* InstaFrame */ = {
+		DA7D25772C7874F8008590B0 /* BorderGenius */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DA7D25862C7874F9008590B0 /* Build configuration list for PBXNativeTarget "InstaFrame" */;
+			buildConfigurationList = DA7D25862C7874F9008590B0 /* Build configuration list for PBXNativeTarget "BorderGenius" */;
 			buildPhases = (
 				DA7D25742C7874F8008590B0 /* Sources */,
 				DA7D25752C7874F8008590B0 /* Frameworks */,
@@ -105,12 +105,12 @@
 			);
 			dependencies = (
 			);
-			name = InstaFrame;
+			name = BorderGenius;
 			packageProductDependencies = (
 				DA63B9782C810343000E5714 /* ColorfulX */,
 			);
 			productName = InstaFrame;
-			productReference = DA7D25782C7874F8008590B0 /* InstaFrame.app */;
+			productReference = DA7D25782C7874F8008590B0 /* BorderGenius.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -128,7 +128,7 @@
 					};
 				};
 			};
-			buildConfigurationList = DA7D25732C7874F8008590B0 /* Build configuration list for PBXProject "InstaFrame" */;
+			buildConfigurationList = DA7D25732C7874F8008590B0 /* Build configuration list for PBXProject "BorderGenius" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -144,7 +144,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				DA7D25772C7874F8008590B0 /* InstaFrame */,
+				DA7D25772C7874F8008590B0 /* BorderGenius */,
 			);
 		};
 /* End PBXProject section */
@@ -305,12 +305,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"InstaFrame/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"BorderGenius/Preview Content\"";
 				DEVELOPMENT_TEAM = X7HH2BJNVL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = BorderGenius;
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app needs permission to save the processed images to your photo library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs access to your photo library to save the processed images with borders.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -323,8 +325,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = tyndfed.InstaFrame;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tyndfed.bordergenius;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -336,12 +339,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"InstaFrame/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"BorderGenius/Preview Content\"";
 				DEVELOPMENT_TEAM = X7HH2BJNVL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = BorderGenius;
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app needs permission to save the processed images to your photo library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs access to your photo library to save the processed images with borders.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -354,8 +359,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = tyndfed.InstaFrame;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tyndfed.bordergenius;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -365,7 +371,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		DA7D25732C7874F8008590B0 /* Build configuration list for PBXProject "InstaFrame" */ = {
+		DA7D25732C7874F8008590B0 /* Build configuration list for PBXProject "BorderGenius" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DA7D25842C7874F9008590B0 /* Debug */,
@@ -374,7 +380,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DA7D25862C7874F9008590B0 /* Build configuration list for PBXNativeTarget "InstaFrame" */ = {
+		DA7D25862C7874F9008590B0 /* Build configuration list for PBXNativeTarget "BorderGenius" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DA7D25872C7874F9008590B0 /* Debug */,
