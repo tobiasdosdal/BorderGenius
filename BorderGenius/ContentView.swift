@@ -1,75 +1,80 @@
 import SwiftUI
-import ColorfulX
 import PhotosUI
 import Photos
+import ColorfulX
 
 struct ContentView: View {
     @State private var selectedImageAssets: [PHAsset] = []
     @State private var showingImagePicker = false
-    @State private var showingEditView = false
     
     let customColors: [Color] = [
-        Color(red: 0.0039, green: 0.0471, blue: 0.2471), /* #010c3f */
-        Color(red: 0.1882, green: 0.2706, blue: 0.4), /* #304566 */
-        Color(red: 0.3725, green: 0.4824, blue: 0.5373),
-        Color(red: 0.0314, green: 0.1608, blue: 0.3176),
-        Color(red: 0.2824, green: 0.6, blue: 0.7098)
+        Color(red: 0.0078, green: 0.3176, blue: 0.349), /* #025159 */
+        Color(red: 0.0157, green: 0.749, blue: 0.749), /* #04bfbf */
+        Color(red: 0.0118, green: 0.549, blue: 0.549), /* #038c8c */
+        Color(red: 0.749, green: 0.6039, blue: 0.4706), /* #bf9a78 */
+        Color(red: 0.549, green: 0.2706, blue: 0.1686) /* #8c452b */
     ]
     
     @State var colors: [Color] = ColorfulPreset.neon.colors
-    @AppStorage("speed") var speed: Double = 0.2
-    @AppStorage("noise") var noise: Double = 5.0
+    @AppStorage("speed") var speed: Double = 0.7
+    @AppStorage("noise") var noise: Double = 8.0
     @AppStorage("duration") var duration: TimeInterval = 10.0
     
     var body: some View {
-        NavigationStack {
+        NavigationView {
             ZStack {
                 ColorfulView(color: $colors, speed: $speed, noise: $noise)
                     .edgesIgnoringSafeArea(.all)
-                
-                VStack {
-                    if selectedImageAssets.isEmpty {
+                    .onAppear {
+                        colors = customColors
+                    }
+                if selectedImageAssets.isEmpty {
+                    VStack {
+                        Text("BorderGenius")
+                            .foregroundColor(.white)
+                            .bold()
+                            .font(.largeTitle)
+                            
                         Text("No images selected")
                             .foregroundColor(.white)
                             .padding()
-                    } else {
-                        Text("\(selectedImageAssets.count) images selected")
-                            .foregroundColor(.white)
-                            .padding()
-                    }
-                    
-                    Button(action: {
-                        showingImagePicker = true
-                    }) {
-                        Label("Select Images", systemImage: "photo.on.rectangle.angled")
-                    }
-                    .buttonStyle(.bordered)
-                    .foregroundColor(.white)
-                    .padding()
-                }
-            }
-            .navigationTitle("InstaFrame")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("InstaFrame")
+                        
+                        Button(action: {
+                            showingImagePicker = true
+                        }) {
+                            Label("Select Images", systemImage: "photo.on.rectangle.angled")
+                        }
+                        .buttonStyle(.bordered)
                         .foregroundColor(.white)
-                        .font(.largeTitle)
+                        .padding()
+                    }
+                } else {
+                    EditView(imageAssets: $selectedImageAssets)
                 }
             }
-            .accentColor(.red)
+            //.navigationTitle("BorderGenius")
+            .navigationBarTitleDisplayMode(.inline)
+//            .toolbar {
+//                ToolbarItem(placement: .principal) {
+//                    Text("BorderGenius")
+//                        .foregroundColor(.white)
+//                        .font(.largeTitle)
+//                }
+//                
+//                ToolbarItem(placement: .navigationBarTrailing) {
+//                    Button(action: {
+//                        showingImagePicker = true
+//                    }) {
+//                        Image(systemName: "plus")
+//                    }
+//                    .foregroundColor(.white)
+//                }
+//            }
             .sheet(isPresented: $showingImagePicker) {
                 ImagePicker(assets: $selectedImageAssets)
             }
-            .onChange(of: selectedImageAssets) { _, newValue in
-                if !newValue.isEmpty {
-                    showingEditView = true
-                }
-            }
-            .navigationDestination(isPresented: $showingEditView) {
-                EditView(imageAssets: $selectedImageAssets)
-            }
         }
+        .accentColor(.white)
     }
 }
 

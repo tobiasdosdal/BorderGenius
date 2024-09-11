@@ -9,21 +9,16 @@ struct EditView: View {
     @State private var selectedSize: InstagramSize = .square
     @State private var processedImages: [Int: UIImage] = [:]
     @State private var originalImages: [Int: UIImage] = [:]
+    @State private var previewImages: [Int: UIImage] = [:]
     @State private var isProcessing = false
     @State private var showingAlert = false
     @State private var alertMessage = ""
     @State private var selectedImageIndex: Int = 0
+    @State private var isLoading = false  // Add this line
+    @State private var isSaving = false
     @Environment(\.presentationMode) var presentationMode
     
     // ColorfulX properties (unchanged)
-    let customColors: [Color] = [
-        Color(red: 0.0039, green: 0.0471, blue: 0.2471),
-        Color(red: 0.1882, green: 0.2706, blue: 0.4),
-        Color(red: 0.3725, green: 0.4824, blue: 0.5373),
-        Color(red: 0.0314, green: 0.1608, blue: 0.3176),
-        Color(red: 0.2824, green: 0.6, blue: 0.7098)
-    ]
-    
     @State var colors: [Color] = ColorfulPreset.neon.colors
     @AppStorage("speed") var speed: Double = 0.2
     @AppStorage("noise") var noise: Double = 5.0
@@ -41,30 +36,26 @@ struct EditView: View {
                             .foregroundColor(.secondary)
                             .padding()
                     } else {
-                        VStack{
-                            Button(action: { deleteImage(at: selectedImageIndex) }) {
-                                Text("Remove Current Image")
-                                    .foregroundColor(.red)
-                                    .padding(.vertical, 5)
-                                    .padding(.horizontal, 10)
-                                    .background(Color.clear)
-                                    .cornerRadius(5)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 5)
-                                            .stroke(Color.red, lineWidth: 1)
-                                    )
-                            }
+                        Button(action: { deleteImage(at: selectedImageIndex) }) {
+                            Text("Remove Current Image")
+                                .foregroundColor(.red)
+                                .padding(.vertical, 5)
+                                .padding(.horizontal, 10)
+                                .background(Color.clear)
+                                .cornerRadius(5)
+                                .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.red, lineWidth: 1))
                         }
+                        
                         // Image slider
                         TabView(selection: $selectedImageIndex) {
-                            ForEach(Array(imageAssets.enumerated()), id: \.offset) { index, asset in
-                                ImageView(processedImage: processedImages[index])
+                            ForEach(Array(imageAssets.enumerated()), id: \.offset) { index, _ in
+                                ImageView(processedImage: previewImages[index])
                                     .tag(index)
                             }
                         }
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
                         .onChange(of: selectedImageIndex) { _ in
-                            updateCurrentImage()
+                            updateCurrentPreviewImage()
                         }
                         
                         // Controls
@@ -85,58 +76,143 @@ struct EditView: View {
                         }
                         .padding()
                         
-                        if isProcessing {
-                            ProgressView()
+                        if isSaving {
+                            ProgressView("Saving images...")
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .foregroundColor(.white)
                         }
                     }
                 }
-                .navigationBarTitle("", displayMode: .inline)
-                .navigationBarBackButtonHidden(true)
-                .navigationBarItems(
-                    leading: Button("Done") { presentationMode.wrappedValue.dismiss() }
-                        .accentColor(.white),
-                    trailing: Button(action: saveImagesToPhotos) {
-                        Image(systemName: "square.and.arrow.down")
-                    }
-                        .accentColor(.white)
-                    .disabled(isProcessing || imageAssets.isEmpty)
-                )
+                        .navigationBarTitle("", displayMode: .inline)
+                        .navigationBarBackButtonHidden(true)
+                        .navigationBarItems(
+                            //leading: Button("Done") { presentationMode.wrappedValue.dismiss() },
+                            trailing: Button(action: saveImagesToPhotos) {
+                                Image(systemName: "square.and.arrow.down")
+                            }
+                                .disabled(isSaving || imageAssets.isEmpty)
+                        )
+                        .alert(isPresented: $showingAlert) {
+                            Alert(
+                                title: Text("Save to Photos"),
+                                message: Text(alertMessage),
+                                dismissButton: .default(Text("OK")) {
+                                    if imageAssets.isEmpty {
+                                        presentationMode.wrappedValue.dismiss()
+                                    }
+                                }
+                            )
+                }
             }
         }
-        .onAppear {
-            loadOriginalImages()
-        }
-        .onChange(of: borderColor) { _ in updateCurrentImage() }
-        .onChange(of: borderThickness) { _ in updateCurrentImage() }
-        .onChange(of: selectedSize) { _ in updateCurrentImage() }
+        .onAppear(perform: loadOriginalImages)
+        .onChange(of: borderColor) { _ in updateCurrentPreviewImage() }
+        .onChange(of: borderThickness) { _ in updateCurrentPreviewImage() }
+        .onChange(of: selectedSize) { _ in updateCurrentPreviewImage() }
         .alert(isPresented: $showingAlert) {
             Alert(title: Text("Save to Photos"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
     }
 
     private func loadOriginalImages() {
+        isLoading = true
+        let options = PHImageRequestOptions()
+        options.deliveryMode = .highQualityFormat
+        options.isNetworkAccessAllowed = true
+        options.isSynchronous = false
+        
+        let targetSize = CGSize(width: 1000, height: 1000) // Adjust based on your needs
+        
         for (index, asset) in imageAssets.enumerated() {
-            let options = PHImageRequestOptions()
-            options.deliveryMode = .highQualityFormat
-            options.isNetworkAccessAllowed = true
-            
-            PHImageManager.default().requestImage(for: asset, targetSize: CGSize(width: 1000, height: 1000), contentMode: .aspectFit, options: options) { image, _ in
-                guard let image = image else { return }
-                DispatchQueue.main.async {
-                    self.originalImages[index] = image
-                    self.updateCurrentImage()
+            PHImageManager.default().requestImage(
+                for: asset,
+                targetSize: PHImageManagerMaximumSize,
+                contentMode: .aspectFit,
+                options: options
+            ) { image, info in
+                if let error = info?[PHImageErrorKey] as? Error {
+                    print("Error loading image: \(error.localizedDescription)")
+                    // Handle error (e.g., show an alert to the user)
+                } else if let image = image {
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        autoreleasepool {
+                            let downsampledImage = self.downsampleImage(image: image, to: targetSize)
+                            DispatchQueue.main.async {
+                                self.originalImages[index] = downsampledImage
+                                self.updatePreviewImage(at: index)
+                                if index == self.imageAssets.count - 1 {
+                                    self.isLoading = false
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
-
-    private func updateCurrentImage() {
-        guard let originalImage = originalImages[selectedImageIndex] else { return }
+    
+    // 3. Process images in batches
+    private func processImagesInBatches() {
+        let batchSize = 3 // Adjust based on your app's performance
+        
+        for i in stride(from: 0, to: imageAssets.count, by: batchSize) {
+            let end = min(i + batchSize, imageAssets.count)
+            let batch = Array(imageAssets[i..<end])
+            
+            autoreleasepool {
+                for (index, asset) in batch.enumerated() {
+                    processImage(asset, at: i + index)
+                }
+            }
+        }
+    }
+    
+    private func processImage(_ asset: PHAsset, at index: Int) {
+        guard let originalImage = originalImages[index] else { return }
         
         DispatchQueue.global(qos: .userInitiated).async {
-            let processedImage = self.processAndAddBorder(to: originalImage, color: UIColor(self.borderColor), thickness: self.borderThickness, size: self.selectedSize)
-            DispatchQueue.main.async {
-                self.processedImages[self.selectedImageIndex] = processedImage
+            autoreleasepool {
+                let processedImage = self.processAndAddBorder(to: originalImage, color: UIColor(self.borderColor), thickness: self.borderThickness, size: self.selectedSize)
+                DispatchQueue.main.async {
+                    self.previewImages[index] = processedImage
+                }
+            }
+        }
+    }
+    
+    private func downsampleImage(image: UIImage, to targetSize: CGSize) -> UIImage {
+        let size = image.size
+        let scaleFactor = max(targetSize.width / size.width, targetSize.height / size.height)
+        
+        if scaleFactor >= 1 {
+            return image // No need to downsample
+        }
+        
+        let newSize = CGSize(width: size.width * scaleFactor, height: size.height * scaleFactor)
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, image.scale)
+        image.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage ?? image
+    }
+
+
+    private func updateCurrentPreviewImage() {
+        updatePreviewImage(at: selectedImageIndex)
+    }
+
+    private func updatePreviewImage(at index: Int) {
+        guard let originalImage = originalImages[index] else { return }
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            autoreleasepool {
+                let processedImage = self.processAndAddBorder(to: originalImage, color: UIColor(self.borderColor), thickness: self.borderThickness, size: self.selectedSize)
+                DispatchQueue.main.async {
+                    self.previewImages[index] = processedImage
+                }
             }
         }
     }
@@ -146,11 +222,13 @@ struct EditView: View {
         imageAssets.remove(at: index)
         processedImages.removeValue(forKey: index)
         originalImages.removeValue(forKey: index)
+        previewImages.removeValue(forKey: index)
         
-        // Shift the remaining processed images
+        // Shift the remaining images
         for i in index..<imageAssets.count {
             processedImages[i] = processedImages.removeValue(forKey: i + 1)
             originalImages[i] = originalImages.removeValue(forKey: i + 1)
+            previewImages[i] = previewImages.removeValue(forKey: i + 1)
         }
         
         if selectedImageIndex >= imageAssets.count {
@@ -159,23 +237,40 @@ struct EditView: View {
     }
 
     private func saveImagesToPhotos() {
-        PHPhotoLibrary.requestAuthorization { status in
-            DispatchQueue.main.async {
+            isSaving = true
+            PHPhotoLibrary.requestAuthorization { status in
                 if status == .authorized {
-                    var savedCount = 0
-                    for (_, image) in processedImages {
-                        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                        savedCount += 1
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        var savedCount = 0
+                        for (index, originalImage) in self.originalImages {
+                            let processedImage = self.processAndAddBorder(to: originalImage, color: UIColor(self.borderColor), thickness: self.borderThickness, size: self.selectedSize)
+                            UIImageWriteToSavedPhotosAlbum(processedImage, nil, nil, nil)
+                            savedCount += 1
+                        }
+                        DispatchQueue.main.async {
+                            self.alertMessage = "\(savedCount) image(s) saved successfully to Photos library!"
+                            self.showingAlert = true
+                            self.isSaving = false
+                            self.clearPhotos()
+                        }
                     }
-                    alertMessage = "\(savedCount) image(s) saved successfully to Photos library!"
-                    showingAlert = true
                 } else {
-                    alertMessage = "Unable to access the Photos library. Please check your permissions in Settings."
-                    showingAlert = true
+                    DispatchQueue.main.async {
+                        self.alertMessage = "Unable to access the Photos library. Please check your permissions in Settings."
+                        self.showingAlert = true
+                        self.isSaving = false
+                    }
                 }
             }
         }
-    }
+    
+    private func clearPhotos() {
+            imageAssets.removeAll()
+            originalImages.removeAll()
+            processedImages.removeAll()
+            previewImages.removeAll()
+            selectedImageIndex = 0
+        }
 
     private func processAndAddBorder(to image: UIImage, color: UIColor, thickness: CGFloat, size: InstagramSize) -> UIImage {
         let croppedImage = cropImage(image, to: size)
@@ -201,7 +296,7 @@ struct EditView: View {
         }
         
         let format = UIGraphicsImageRendererFormat()
-        format.scale = 1
+        format.scale = UIScreen.main.scale
         
         let renderer = UIGraphicsImageRenderer(size: drawRect.size, format: format)
         
@@ -210,9 +305,10 @@ struct EditView: View {
         }
     }
 
+
     private func addBorder(to image: UIImage, color: UIColor, thickness: CGFloat, size: CGSize) -> UIImage {
         let format = UIGraphicsImageRendererFormat()
-        format.scale = 1
+        format.scale = UIScreen.main.scale
         
         let renderer = UIGraphicsImageRenderer(size: size, format: format)
         
@@ -229,6 +325,29 @@ struct EditView: View {
             image.draw(in: aspectFit)
         }
     }
+
+
+    private func downsample(image: UIImage, to pointSize: CGSize) -> UIImage {
+        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let data = image.jpegData(compressionQuality: 1.0),
+              let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {
+            return image
+        }
+        
+        let maxDimensionInPixels = max(pointSize.width, pointSize.height) * UIScreen.main.scale
+        let downsampleOptions = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels
+        ] as CFDictionary
+        
+        guard let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) else {
+            return image
+        }
+        
+        return UIImage(cgImage: downsampledImage)
+    }
 }
 
 struct ImageView: View {
@@ -244,9 +363,7 @@ struct ImageView: View {
                 ProgressView()
             }
         }
-        //.padding(.bottom, 30)
         .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.35)
-        .background(Color.gray.opacity(0.0))
-        //.cornerRadius(10)
+        //.background(Color.gray.opacity(0.1))
     }
 }

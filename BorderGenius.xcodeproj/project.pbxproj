@@ -22,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DA4010742C903A5A006F40D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DA63B9752C7F1D56000E5714 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPickerViewController.swift; sourceTree = "<group>"; };
 		DA7D25782C7874F8008590B0 /* BorderGenius.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BorderGenius.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,6 +68,7 @@
 		DA7D257A2C7874F8008590B0 /* BorderGenius */ = {
 			isa = PBXGroup;
 			children = (
+				DA4010742C903A5A006F40D2 /* Info.plist */,
 				DA63B9752C7F1D56000E5714 /* EditView.swift */,
 				DA7D258A2C7879F2008590B0 /* image-picker.swift */,
 				DA7D25892C7879F2008590B0 /* image-saver.swift */,
@@ -312,6 +314,7 @@
 				DEVELOPMENT_TEAM = X7HH2BJNVL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BorderGenius/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BorderGenius;
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app needs permission to save the processed images to your photo library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs access to your photo library to save the processed images with borders.";
@@ -346,6 +349,7 @@
 				DEVELOPMENT_TEAM = X7HH2BJNVL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BorderGenius/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BorderGenius;
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app needs permission to save the processed images to your photo library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs access to your photo library to save the processed images with borders.";
