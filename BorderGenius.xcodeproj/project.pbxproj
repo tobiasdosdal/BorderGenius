@@ -19,6 +19,7 @@
 		DA7D258F2C7879F2008590B0 /* instagram-size.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D258B2C7879F2008590B0 /* instagram-size.swift */; };
 		DA7D25902C7879F2008590B0 /* preview-image.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D258C2C7879F2008590B0 /* preview-image.swift */; };
 		DA7D25942C787CC5008590B0 /* multiple-image-picker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D25932C787CC5008590B0 /* multiple-image-picker.swift */; };
+		DA8E67AA2C92C4F900AACC2C /* CustomPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8E67A92C92C4F900AACC2C /* CustomPicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		DA7D258B2C7879F2008590B0 /* instagram-size.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "instagram-size.swift"; sourceTree = "<group>"; };
 		DA7D258C2C7879F2008590B0 /* preview-image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "preview-image.swift"; sourceTree = "<group>"; };
 		DA7D25932C787CC5008590B0 /* multiple-image-picker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "multiple-image-picker.swift"; sourceTree = "<group>"; };
+		DA8E67A92C92C4F900AACC2C /* CustomPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 				DA7D257F2C7874F9008590B0 /* Assets.xcassets */,
 				DA7D25812C7874F9008590B0 /* Preview Content */,
 				DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */,
+				DA8E67A92C92C4F900AACC2C /* CustomPicker.swift */,
 			);
 			path = BorderGenius;
 			sourceTree = "<group>";
@@ -168,6 +171,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA8E67AA2C92C4F900AACC2C /* CustomPicker.swift in Sources */,
 				DA7D257E2C7874F8008590B0 /* ContentView.swift in Sources */,
 				DA7D258D2C7879F2008590B0 /* image-saver.swift in Sources */,
 				DA63B9762C7F1D56000E5714 /* EditView.swift in Sources */,

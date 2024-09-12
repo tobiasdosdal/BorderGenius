@@ -1,6 +1,7 @@
 import SwiftUI
 import Photos
 import ColorfulX
+import Combine
 
 struct EditView: View {
     @Binding var imageAssets: [PHAsset]
@@ -17,6 +18,7 @@ struct EditView: View {
     @State private var isLoading = false  // Add this line
     @State private var isSaving = false
     @Environment(\.presentationMode) var presentationMode
+    
     
     // ColorfulX properties (unchanged)
     @State var colors: [Color] = ColorfulPreset.neon.colors
@@ -60,17 +62,18 @@ struct EditView: View {
                         
                         // Controls
                         VStack(spacing: 20) {
-                            Picker("Image Size", selection: $selectedSize) {
-                                ForEach(InstagramSize.allCases) { size in
-                                    Text(size.rawValue).tag(size)
-                                }
-                            }
-                            .pickerStyle(SegmentedPickerStyle())
+                            CustomSegmentedPicker(selectedSize: $selectedSize)
+                                .padding()
+                                .frame(maxWidth: 400) // Adjust this value as needed
+                                .background(Color.clear)
+
                             
                             ColorPicker("Border Color", selection: $borderColor)
+                                .foregroundColor(.white)
                             
                             VStack {
                                 Text("Border Thickness: \(Int(borderThickness)) px")
+                                    .foregroundStyle(Color(.white))
                                 Slider(value: $borderThickness, in: 0...200, step: 1)
                             }
                         }
@@ -274,7 +277,7 @@ struct EditView: View {
 
     private func processAndAddBorder(to image: UIImage, color: UIColor, thickness: CGFloat, size: InstagramSize) -> UIImage {
         let croppedImage = cropImage(image, to: size)
-        return addBorder(to: croppedImage, color: color, thickness: thickness, size: size.size)
+        return addBorder(to: croppedImage, color: color, thickness: thickness, size: size)
     }
 
     private func cropImage(_ image: UIImage, to size: InstagramSize) -> UIImage {
@@ -306,23 +309,46 @@ struct EditView: View {
     }
 
 
-    private func addBorder(to image: UIImage, color: UIColor, thickness: CGFloat, size: CGSize) -> UIImage {
+    private func addBorder(to image: UIImage, color: UIColor, thickness: CGFloat, size: InstagramSize) -> UIImage {
+        let targetSize = size.size
         let format = UIGraphicsImageRendererFormat()
         format.scale = UIScreen.main.scale
         
-        let renderer = UIGraphicsImageRenderer(size: size, format: format)
+        let renderer = UIGraphicsImageRenderer(size: targetSize, format: format)
         
         return renderer.image { context in
             // Fill the entire image with the border color
             color.setFill()
-            context.fill(CGRect(origin: .zero, size: size))
+            context.fill(CGRect(origin: .zero, size: targetSize))
             
             // Calculate the size for the image after applying the border
-            let imageRect = CGRect(x: thickness, y: thickness, width: size.width - (thickness * 2), height: size.height - (thickness * 2))
+            let imageRect = CGRect(x: thickness, y: thickness,
+                                   width: targetSize.width - (thickness * 2),
+                                   height: targetSize.height - (thickness * 2))
+            
+            // Calculate the aspect ratio of the original image
+            let imageAspect = image.size.width / image.size.height
+            
+            // Calculate the aspect ratio of the target size
+            let targetAspect = imageRect.width / imageRect.height
+            
+            let drawRect: CGRect
+            if imageAspect > targetAspect {
+                // Image is wider, fit to height
+                let drawWidth = imageRect.height * imageAspect
+                let xOffset = (imageRect.width - drawWidth) / 2
+                drawRect = CGRect(x: thickness + xOffset, y: thickness,
+                                  width: drawWidth, height: imageRect.height)
+            } else {
+                // Image is taller, fit to width
+                let drawHeight = imageRect.width / imageAspect
+                let yOffset = (imageRect.height - drawHeight) / 2
+                drawRect = CGRect(x: thickness, y: thickness + yOffset,
+                                  width: imageRect.width, height: drawHeight)
+            }
             
             // Draw the image, maintaining its aspect ratio
-            let aspectFit = AVMakeRect(aspectRatio: image.size, insideRect: imageRect)
-            image.draw(in: aspectFit)
+            image.draw(in: drawRect)
         }
     }
 
@@ -353,10 +379,13 @@ struct EditView: View {
 struct ImageView: View {
     let processedImage: UIImage?
     
+    @State private var debouncedImage: UIImage?
+    @State private var debounceTask: Task<Void, Never>?
+    
     var body: some View {
         Group {
-            if let processedImage = processedImage {
-                Image(uiImage: processedImage)
+            if let debouncedImage = debouncedImage {
+                Image(uiImage: debouncedImage)
                     .resizable()
                     .scaledToFit()
             } else {
@@ -364,6 +393,21 @@ struct ImageView: View {
             }
         }
         .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.35)
-        //.background(Color.gray.opacity(0.1))
+        .onAppear {
+            updateDebouncedImage()
+        }
+        .onChange(of: processedImage) { _, _ in updateDebouncedImage() }
+    }
+    
+    private func updateDebouncedImage() {
+        debounceTask?.cancel()
+        debounceTask = Task {
+            try? await Task.sleep(nanoseconds: 300_000_000) // 300 milliseconds
+            if !Task.isCancelled {
+                await MainActor.run {
+                    debouncedImage = processedImage
+                }
+            }
+        }
     }
 }

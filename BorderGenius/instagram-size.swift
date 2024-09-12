@@ -2,7 +2,7 @@ import SwiftUI
 
 enum InstagramSize: String, CaseIterable, Identifiable {
     case square = "Square"
-    case portrait = "Portrait"
+    case portrait = "Story"
     case landscape = "Landscape"
     
     var id: String { self.rawValue }
@@ -10,7 +10,7 @@ enum InstagramSize: String, CaseIterable, Identifiable {
     var size: CGSize {
         switch self {
         case .square: return CGSize(width: 1080, height: 1080)
-        case .portrait: return CGSize(width: 1080, height: 1350)
+        case .portrait: return CGSize(width: 1080, height: 1920)
         case .landscape: return CGSize(width: 1080, height: 608)
         }
     }
