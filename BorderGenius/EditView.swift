@@ -56,9 +56,7 @@ struct EditView: View {
                             }
                         }
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-                        .onChange(of: selectedImageIndex) { _ in
-                            updateCurrentPreviewImage()
-                        }
+                        .onChange(of: selectedImageIndex) { _, _ in updateCurrentPreviewImage() }
                         
                         // Controls
                         VStack(spacing: 20) {
@@ -74,7 +72,7 @@ struct EditView: View {
                             VStack {
                                 Text("Border Thickness: \(Int(borderThickness)) px")
                                     .foregroundStyle(Color(.white))
-                                Slider(value: $borderThickness, in: 0...200, step: 1)
+                                Slider(value: $borderThickness, in: 0...300, step: 5)
                             }
                         }
                         .padding()
@@ -109,9 +107,9 @@ struct EditView: View {
             }
         }
         .onAppear(perform: loadOriginalImages)
-        .onChange(of: borderColor) { _ in updateCurrentPreviewImage() }
-        .onChange(of: borderThickness) { _ in updateCurrentPreviewImage() }
-        .onChange(of: selectedSize) { _ in updateCurrentPreviewImage() }
+        .onChange(of: borderColor) { _, _ in updateCurrentPreviewImage() }
+        .onChange(of: borderThickness) { _, _ in updateCurrentPreviewImage() }
+        .onChange(of: selectedSize) { _, _ in updateCurrentPreviewImage() }
         .alert(isPresented: $showingAlert) {
             Alert(title: Text("Save to Photos"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
@@ -240,32 +238,32 @@ struct EditView: View {
     }
 
     private func saveImagesToPhotos() {
-            isSaving = true
-            PHPhotoLibrary.requestAuthorization { status in
-                if status == .authorized {
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        var savedCount = 0
-                        for (index, originalImage) in self.originalImages {
-                            let processedImage = self.processAndAddBorder(to: originalImage, color: UIColor(self.borderColor), thickness: self.borderThickness, size: self.selectedSize)
-                            UIImageWriteToSavedPhotosAlbum(processedImage, nil, nil, nil)
-                            savedCount += 1
-                        }
-                        DispatchQueue.main.async {
-                            self.alertMessage = "\(savedCount) image(s) saved successfully to Photos library!"
-                            self.showingAlert = true
-                            self.isSaving = false
-                            self.clearPhotos()
-                        }
+        isSaving = true
+        PHPhotoLibrary.requestAuthorization { status in
+            if status == .authorized {
+                DispatchQueue.global(qos: .userInitiated).async {
+                    var savedCount = 0
+                    for (_, originalImage) in self.originalImages {
+                        let processedImage = self.processAndAddBorder(to: originalImage, color: UIColor(self.borderColor), thickness: self.borderThickness, size: self.selectedSize)
+                        UIImageWriteToSavedPhotosAlbum(processedImage, nil, nil, nil)
+                        savedCount += 1
                     }
-                } else {
                     DispatchQueue.main.async {
-                        self.alertMessage = "Unable to access the Photos library. Please check your permissions in Settings."
+                        self.alertMessage = "\(savedCount) image(s) saved successfully to Photos library!"
                         self.showingAlert = true
                         self.isSaving = false
+                        self.clearPhotos()
                     }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.alertMessage = "Unable to access the Photos library. Please check your permissions in Settings."
+                    self.showingAlert = true
+                    self.isSaving = false
                 }
             }
         }
+    }
     
     private func clearPhotos() {
             imageAssets.removeAll()

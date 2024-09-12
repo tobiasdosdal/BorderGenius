@@ -20,8 +20,8 @@ struct CustomSegmentedPicker: View {
                     VStack(spacing: 2) {
                         Text(size.rawValue)
                             .font(.headline)
-                        Text("\(Int(size.size.width))x\(Int(size.size.height))")
-                            .font(.caption)
+//                        Text("\(Int(size.size.width))x\(Int(size.size.height))")
+//                            .font(.caption)
                     }
                     .padding(.vertical, 8)
                     .frame(maxWidth: .infinity)
