@@ -18,14 +18,28 @@ struct PreviewImage: View {
     let image: UIImage
     let borderColor: Color
     let borderThickness: CGFloat
-    let size: InstagramSize
+    let orientation: PostOrientation
+    let aspectRatio: AspectRatio
     
     @State private var processedImage: UIImage?
     @State private var isProcessing = false
     @State private var cancellable: AnyCancellable?
     
     private var cacheKey: String {
-        "\(image.hashValue)-\(borderColor.hashValue)-\(borderThickness)-\(size.rawValue)"
+        "\(image.hashValue)-\(borderColor.hashValue)-\(borderThickness)-\(orientation.rawValue)-\(aspectRatio.display)"
+    }
+    
+    private var size: CGSize {
+        let baseWidth: CGFloat = 1080 // Instagram's recommended width
+        let height: CGFloat
+        
+        if orientation == .portrait {
+            height = baseWidth / aspectRatio.ratio
+        } else {
+            height = baseWidth * aspectRatio.ratio
+        }
+        
+        return CGSize(width: baseWidth, height: height)
     }
     
     var body: some View {
@@ -40,11 +54,12 @@ struct PreviewImage: View {
                 Color.gray
             }
         }
-        .aspectRatio(size.aspectRatio, contentMode: .fit)
+        .aspectRatio(aspectRatio.ratio, contentMode: .fit)
         .onAppear(perform: loadImage)
-        .onChange(of: borderColor) { _, _ in loadImage() }
-        .onChange(of: borderThickness) { _, _ in loadImage() }
-        .onChange(of: size) { _, _ in loadImage() }
+        .onChange(of: borderColor) { _ in loadImage() }
+        .onChange(of: borderThickness) { _ in loadImage() }
+        .onChange(of: orientation) { _ in loadImage() }
+        .onChange(of: aspectRatio) { _ in loadImage() }
     }
     
     private func loadImage() {
@@ -58,11 +73,12 @@ struct PreviewImage: View {
         isProcessing = true
         
         let currentCacheKey = self.cacheKey
+        let currentSize = self.size
         
         cancellable = Future<UIImage, Never> { promise in
             DispatchQueue.global(qos: .userInitiated).async {
-                let downsampledImage = downsample(image: image, to: size.size)
-                let processedImage = addBorder(to: downsampledImage, color: UIColor(borderColor), thickness: borderThickness, size: size)
+                let downsampledImage = downsample(image: image, to: currentSize)
+                let processedImage = addBorder(to: downsampledImage, color: UIColor(borderColor), thickness: borderThickness, size: currentSize)
                 promise(.success(processedImage))
             }
         }
@@ -98,24 +114,23 @@ struct PreviewImage: View {
         return UIImage(cgImage: downsampledImage)
     }
     
-    private func addBorder(to image: UIImage, color: UIColor, thickness: CGFloat, size: InstagramSize) -> UIImage {
-        let imageSize = size.size
-        
-        UIGraphicsBeginImageContextWithOptions(imageSize, false, 1)
+    private func addBorder(to image: UIImage, color: UIColor, thickness: CGFloat, size: CGSize) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(size, false, 1)
         defer { UIGraphicsEndImageContext() }
         
         guard let context = UIGraphicsGetCurrentContext() else { return image }
         
         // Draw border
         context.setFillColor(color.cgColor)
-        context.fill(CGRect(origin: .zero, size: imageSize))
+        context.fill(CGRect(origin: .zero, size: size))
         
         // Draw image
         let imageRect = CGRect(x: thickness, y: thickness,
-                               width: imageSize.width - (thickness * 2),
-                               height: imageSize.height - (thickness * 2))
+                               width: size.width - (thickness * 2),
+                               height: size.height - (thickness * 2))
         image.draw(in: imageRect)
         
         return UIGraphicsGetImageFromCurrentImageContext() ?? image
     }
+
 }

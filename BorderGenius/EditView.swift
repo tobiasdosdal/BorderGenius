@@ -7,7 +7,6 @@ struct EditView: View {
     @Binding var imageAssets: [PHAsset]
     @State private var borderColor: Color = .white
     @State private var borderThickness: CGFloat = 20
-    @State private var selectedSize: InstagramSize = .square
     @State private var processedImages: [Int: UIImage] = [:]
     @State private var originalImages: [Int: UIImage] = [:]
     @State private var previewImages: [Int: UIImage] = [:]
@@ -15,12 +14,12 @@ struct EditView: View {
     @State private var showingAlert = false
     @State private var alertMessage = ""
     @State private var selectedImageIndex: Int = 0
-    @State private var isLoading = false  // Add this line
+    @State private var isLoading = false
+    @State private var selectedAspectRatio: AspectRatio = .square
     @State private var isSaving = false
     @Environment(\.presentationMode) var presentationMode
     
-    
-    // ColorfulX properties (unchanged)
+    // ColorfulX properties
     @State var colors: [Color] = ColorfulPreset.neon.colors
     @AppStorage("speed") var speed: Double = 0.2
     @AppStorage("noise") var noise: Double = 5.0
@@ -60,11 +59,10 @@ struct EditView: View {
                         
                         // Controls
                         VStack(spacing: 20) {
-                            CustomSegmentedPicker(selectedSize: $selectedSize)
+                            CustomSegmentedPicker(selectedAspectRatio: $selectedAspectRatio)
                                 .padding()
-                                .frame(maxWidth: 400) // Adjust this value as needed
+                                .frame(maxWidth: 400)
                                 .background(Color.clear)
-
                             
                             ColorPicker("Border Color", selection: $borderColor)
                                 .foregroundColor(.white)
@@ -84,35 +82,31 @@ struct EditView: View {
                         }
                     }
                 }
-                        .navigationBarTitle("", displayMode: .inline)
-                        .navigationBarBackButtonHidden(true)
-                        .navigationBarItems(
-                            //leading: Button("Done") { presentationMode.wrappedValue.dismiss() },
-                            trailing: Button(action: saveImagesToPhotos) {
-                                Image(systemName: "square.and.arrow.down")
+                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarBackButtonHidden(true)
+                .navigationBarItems(
+                    trailing: Button(action: saveImagesToPhotos) {
+                        Image(systemName: "square.and.arrow.down")
+                    }
+                    .disabled(isSaving || imageAssets.isEmpty)
+                )
+                .alert(isPresented: $showingAlert) {
+                    Alert(
+                        title: Text("Save to Photos"),
+                        message: Text(alertMessage),
+                        dismissButton: .default(Text("OK")) {
+                            if imageAssets.isEmpty {
+                                presentationMode.wrappedValue.dismiss()
                             }
-                                .disabled(isSaving || imageAssets.isEmpty)
-                        )
-                        .alert(isPresented: $showingAlert) {
-                            Alert(
-                                title: Text("Save to Photos"),
-                                message: Text(alertMessage),
-                                dismissButton: .default(Text("OK")) {
-                                    if imageAssets.isEmpty {
-                                        presentationMode.wrappedValue.dismiss()
-                                    }
-                                }
-                            )
+                        }
+                    )
                 }
             }
         }
         .onAppear(perform: loadOriginalImages)
         .onChange(of: borderColor) { _, _ in updateCurrentPreviewImage() }
         .onChange(of: borderThickness) { _, _ in updateCurrentPreviewImage() }
-        .onChange(of: selectedSize) { _, _ in updateCurrentPreviewImage() }
-        .alert(isPresented: $showingAlert) {
-            Alert(title: Text("Save to Photos"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-        }
+        .onChange(of: selectedAspectRatio) { _, _ in updateCurrentPreviewImage() }
     }
 
     private func loadOriginalImages() {
@@ -122,7 +116,7 @@ struct EditView: View {
         options.isNetworkAccessAllowed = true
         options.isSynchronous = false
         
-        let targetSize = CGSize(width: 1000, height: 1000) // Adjust based on your needs
+        let targetSize = CGSize(width: 1000, height: 1000)
         
         for (index, asset) in imageAssets.enumerated() {
             PHImageManager.default().requestImage(
@@ -133,7 +127,6 @@ struct EditView: View {
             ) { image, info in
                 if let error = info?[PHImageErrorKey] as? Error {
                     print("Error loading image: \(error.localizedDescription)")
-                    // Handle error (e.g., show an alert to the user)
                 } else if let image = image {
                     DispatchQueue.global(qos: .userInitiated).async {
                         autoreleasepool {
@@ -152,55 +145,6 @@ struct EditView: View {
         }
     }
     
-    // 3. Process images in batches
-    private func processImagesInBatches() {
-        let batchSize = 3 // Adjust based on your app's performance
-        
-        for i in stride(from: 0, to: imageAssets.count, by: batchSize) {
-            let end = min(i + batchSize, imageAssets.count)
-            let batch = Array(imageAssets[i..<end])
-            
-            autoreleasepool {
-                for (index, asset) in batch.enumerated() {
-                    processImage(asset, at: i + index)
-                }
-            }
-        }
-    }
-    
-    private func processImage(_ asset: PHAsset, at index: Int) {
-        guard let originalImage = originalImages[index] else { return }
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            autoreleasepool {
-                let processedImage = self.processAndAddBorder(to: originalImage, color: UIColor(self.borderColor), thickness: self.borderThickness, size: self.selectedSize)
-                DispatchQueue.main.async {
-                    self.previewImages[index] = processedImage
-                }
-            }
-        }
-    }
-    
-    private func downsampleImage(image: UIImage, to targetSize: CGSize) -> UIImage {
-        let size = image.size
-        let scaleFactor = max(targetSize.width / size.width, targetSize.height / size.height)
-        
-        if scaleFactor >= 1 {
-            return image // No need to downsample
-        }
-        
-        let newSize = CGSize(width: size.width * scaleFactor, height: size.height * scaleFactor)
-        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
-        
-        UIGraphicsBeginImageContextWithOptions(newSize, false, image.scale)
-        image.draw(in: rect)
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return newImage ?? image
-    }
-
-
     private func updateCurrentPreviewImage() {
         updatePreviewImage(at: selectedImageIndex)
     }
@@ -210,7 +154,7 @@ struct EditView: View {
         
         DispatchQueue.global(qos: .userInitiated).async {
             autoreleasepool {
-                let processedImage = self.processAndAddBorder(to: originalImage, color: UIColor(self.borderColor), thickness: self.borderThickness, size: self.selectedSize)
+                let processedImage = self.processAndAddBorder(to: originalImage, color: UIColor(self.borderColor), thickness: self.borderThickness, aspectRatio: self.selectedAspectRatio)
                 DispatchQueue.main.async {
                     self.previewImages[index] = processedImage
                 }
@@ -244,7 +188,7 @@ struct EditView: View {
                 DispatchQueue.global(qos: .userInitiated).async {
                     var savedCount = 0
                     for (_, originalImage) in self.originalImages {
-                        let processedImage = self.processAndAddBorder(to: originalImage, color: UIColor(self.borderColor), thickness: self.borderThickness, size: self.selectedSize)
+                        let processedImage = self.processAndAddBorder(to: originalImage, color: UIColor(self.borderColor), thickness: self.borderThickness, aspectRatio: self.selectedAspectRatio)
                         UIImageWriteToSavedPhotosAlbum(processedImage, nil, nil, nil)
                         savedCount += 1
                     }
@@ -266,38 +210,37 @@ struct EditView: View {
     }
     
     private func clearPhotos() {
-            imageAssets.removeAll()
-            originalImages.removeAll()
-            processedImages.removeAll()
-            previewImages.removeAll()
-            selectedImageIndex = 0
-        }
-
-    private func processAndAddBorder(to image: UIImage, color: UIColor, thickness: CGFloat, size: InstagramSize) -> UIImage {
-        let croppedImage = cropImage(image, to: size)
-        return addBorder(to: croppedImage, color: color, thickness: thickness, size: size)
+        imageAssets.removeAll()
+        originalImages.removeAll()
+        processedImages.removeAll()
+        previewImages.removeAll()
+        selectedImageIndex = 0
     }
 
-    private func cropImage(_ image: UIImage, to size: InstagramSize) -> UIImage {
-        let targetAspect = size.aspectRatio
+    private func processAndAddBorder(to image: UIImage, color: UIColor, thickness: CGFloat, aspectRatio: AspectRatio) -> UIImage {
+        let croppedImage = cropImage(image, to: aspectRatio.ratio)
+        return addBorder(to: croppedImage, color: color, thickness: thickness, aspectRatio: aspectRatio)
+    }
+
+    private func cropImage(_ image: UIImage, to aspectRatio: CGFloat) -> UIImage {
         let imageAspect = image.size.width / image.size.height
         
         var drawRect: CGRect
         
-        if imageAspect > targetAspect {
+        if imageAspect > aspectRatio {
             // Image is wider, crop the sides
-            let newWidth = image.size.height * targetAspect
+            let newWidth = image.size.height * aspectRatio
             let xOffset = (image.size.width - newWidth) / 2
             drawRect = CGRect(x: xOffset, y: 0, width: newWidth, height: image.size.height)
         } else {
             // Image is taller, crop the top and bottom
-            let newHeight = image.size.width / targetAspect
+            let newHeight = image.size.width / aspectRatio
             let yOffset = (image.size.height - newHeight) / 2
             drawRect = CGRect(x: 0, y: yOffset, width: image.size.width, height: newHeight)
         }
         
         let format = UIGraphicsImageRendererFormat()
-        format.scale = UIScreen.main.scale
+        format.scale = 1
         
         let renderer = UIGraphicsImageRenderer(size: drawRect.size, format: format)
         
@@ -306,11 +249,33 @@ struct EditView: View {
         }
     }
 
-
-    private func addBorder(to image: UIImage, color: UIColor, thickness: CGFloat, size: InstagramSize) -> UIImage {
-        let targetSize = size.size
+    private func addBorder(to image: UIImage, color: UIColor, thickness: CGFloat, aspectRatio: AspectRatio) -> UIImage {
+        let baseSize: CGFloat = 1080
+        let targetSize: CGSize
+        let imageRect: CGRect
+        
+        if aspectRatio.ratio > 1 {
+            // Landscape
+            targetSize = CGSize(width: baseSize, height: baseSize / aspectRatio.ratio)
+            let availableWidth = targetSize.width - (thickness * 2)
+            let availableHeight = targetSize.height - (thickness * 2)
+            let imageWidth = availableWidth
+            let imageHeight = imageWidth / aspectRatio.ratio
+            let yOffset = (availableHeight - imageHeight) / 2
+            imageRect = CGRect(x: thickness, y: thickness + yOffset, width: imageWidth, height: imageHeight)
+        } else {
+            // Portrait or Square
+            targetSize = CGSize(width: baseSize, height: baseSize / aspectRatio.ratio)
+            let availableWidth = targetSize.width - (thickness * 2)
+            let availableHeight = targetSize.height - (thickness * 2)
+            let imageHeight = availableHeight
+            let imageWidth = imageHeight * aspectRatio.ratio
+            let xOffset = (availableWidth - imageWidth) / 2
+            imageRect = CGRect(x: thickness + xOffset, y: thickness, width: imageWidth, height: imageHeight)
+        }
+        
         let format = UIGraphicsImageRendererFormat()
-        format.scale = UIScreen.main.scale
+        format.scale = 1
         
         let renderer = UIGraphicsImageRenderer(size: targetSize, format: format)
         
@@ -319,58 +284,28 @@ struct EditView: View {
             color.setFill()
             context.fill(CGRect(origin: .zero, size: targetSize))
             
-            // Calculate the size for the image after applying the border
-            let imageRect = CGRect(x: thickness, y: thickness,
-                                   width: targetSize.width - (thickness * 2),
-                                   height: targetSize.height - (thickness * 2))
-            
-            // Calculate the aspect ratio of the original image
-            let imageAspect = image.size.width / image.size.height
-            
-            // Calculate the aspect ratio of the target size
-            let targetAspect = imageRect.width / imageRect.height
-            
-            let drawRect: CGRect
-            if imageAspect > targetAspect {
-                // Image is wider, fit to height
-                let drawWidth = imageRect.height * imageAspect
-                let xOffset = (imageRect.width - drawWidth) / 2
-                drawRect = CGRect(x: thickness + xOffset, y: thickness,
-                                  width: drawWidth, height: imageRect.height)
-            } else {
-                // Image is taller, fit to width
-                let drawHeight = imageRect.width / imageAspect
-                let yOffset = (imageRect.height - drawHeight) / 2
-                drawRect = CGRect(x: thickness, y: thickness + yOffset,
-                                  width: imageRect.width, height: drawHeight)
-            }
-            
             // Draw the image, maintaining its aspect ratio
-            image.draw(in: drawRect)
+            image.draw(in: imageRect)
         }
     }
 
-
-    private func downsample(image: UIImage, to pointSize: CGSize) -> UIImage {
-        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
-        guard let data = image.jpegData(compressionQuality: 1.0),
-              let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {
-            return image
+    private func downsampleImage(image: UIImage, to targetSize: CGSize) -> UIImage {
+        let size = image.size
+        let scaleFactor = max(targetSize.width / size.width, targetSize.height / size.height)
+        
+        if scaleFactor >= 1 {
+            return image // No need to downsample
         }
         
-        let maxDimensionInPixels = max(pointSize.width, pointSize.height) * UIScreen.main.scale
-        let downsampleOptions = [
-            kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceShouldCacheImmediately: true,
-            kCGImageSourceCreateThumbnailWithTransform: true,
-            kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels
-        ] as CFDictionary
+        let newSize = CGSize(width: size.width * scaleFactor, height: size.height * scaleFactor)
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
         
-        guard let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) else {
-            return image
-        }
+        UIGraphicsBeginImageContextWithOptions(newSize, false, image.scale)
+        image.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
         
-        return UIImage(cgImage: downsampledImage)
+        return newImage ?? image
     }
 }
 

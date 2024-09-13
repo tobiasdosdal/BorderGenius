@@ -9,24 +9,20 @@ import Foundation
 import SwiftUI
 
 struct CustomSegmentedPicker: View {
-    @Binding var selectedSize: InstagramSize
+    @Binding var selectedAspectRatio: AspectRatio
     
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(InstagramSize.allCases) { size in
+            ForEach(AspectRatio.allCases) { ratio in
                 Button(action: {
-                    selectedSize = size
+                    selectedAspectRatio = ratio
                 }) {
-                    VStack(spacing: 2) {
-                        Text(size.rawValue)
-                            .font(.headline)
-//                        Text("\(Int(size.size.width))x\(Int(size.size.height))")
-//                            .font(.caption)
-                    }
-                    .padding(.vertical, 8)
-                    .frame(maxWidth: .infinity)
-                    .background(selectedSize == size ? Color.white.opacity(0.2) : Color.clear)
-                    .foregroundColor(.white)
+                    Text(ratio.display)
+                        .font(.caption)
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity)
+                        .background(selectedAspectRatio == ratio ? Color.white.opacity(0.2) : Color.clear)
+                        .foregroundColor(.white)
                 }
             }
         }
