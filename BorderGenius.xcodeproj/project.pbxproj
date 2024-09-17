@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA112D8B2C99855C0026BB80 /* NegativesConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA112D8A2C99855C0026BB80 /* NegativesConverter.swift */; };
+		DA5239022C99FEEA00FD8B31 /* ColorModificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5239012C99FEEA00FD8B31 /* ColorModificationView.swift */; };
+		DA5239042C9A017E00FD8B31 /* ColorModification.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5239032C9A017E00FD8B31 /* ColorModification.swift */; };
+		DA5239072C9A0BDE00FD8B31 /* BrightroomEngine in Frameworks */ = {isa = PBXBuildFile; productRef = DA5239062C9A0BDE00FD8B31 /* BrightroomEngine */; };
+		DA5239092C9A0BDE00FD8B31 /* BrightroomUI in Frameworks */ = {isa = PBXBuildFile; productRef = DA5239082C9A0BDE00FD8B31 /* BrightroomUI */; };
 		DA63B9762C7F1D56000E5714 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA63B9752C7F1D56000E5714 /* EditView.swift */; };
 		DA63B9792C810343000E5714 /* ColorfulX in Frameworks */ = {isa = PBXBuildFile; productRef = DA63B9782C810343000E5714 /* ColorfulX */; };
 		DA63B97B2C81081E000E5714 /* CustomPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */; };
@@ -23,7 +28,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DA112D8A2C99855C0026BB80 /* NegativesConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NegativesConverter.swift; sourceTree = "<group>"; };
 		DA4010742C903A5A006F40D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		DA5239012C99FEEA00FD8B31 /* ColorModificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorModificationView.swift; sourceTree = "<group>"; };
+		DA5239032C9A017E00FD8B31 /* ColorModification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorModification.swift; sourceTree = "<group>"; };
 		DA63B9752C7F1D56000E5714 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPickerViewController.swift; sourceTree = "<group>"; };
 		DA7D25782C7874F8008590B0 /* BorderGenius.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BorderGenius.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -45,6 +53,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA63B9792C810343000E5714 /* ColorfulX in Frameworks */,
+				DA5239092C9A0BDE00FD8B31 /* BrightroomUI in Frameworks */,
+				DA5239072C9A0BDE00FD8B31 /* BrightroomEngine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +93,9 @@
 				DA7D25812C7874F9008590B0 /* Preview Content */,
 				DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */,
 				DA8E67A92C92C4F900AACC2C /* CustomPicker.swift */,
+				DA112D8A2C99855C0026BB80 /* NegativesConverter.swift */,
+				DA5239012C99FEEA00FD8B31 /* ColorModificationView.swift */,
+				DA5239032C9A017E00FD8B31 /* ColorModification.swift */,
 			);
 			path = BorderGenius;
 			sourceTree = "<group>";
@@ -113,6 +126,8 @@
 			name = BorderGenius;
 			packageProductDependencies = (
 				DA63B9782C810343000E5714 /* ColorfulX */,
+				DA5239062C9A0BDE00FD8B31 /* BrightroomEngine */,
+				DA5239082C9A0BDE00FD8B31 /* BrightroomUI */,
 			);
 			productName = InstaFrame;
 			productReference = DA7D25782C7874F8008590B0 /* BorderGenius.app */;
@@ -144,6 +159,7 @@
 			mainGroup = DA7D256F2C7874F8008590B0;
 			packageReferences = (
 				DA63B9772C810343000E5714 /* XCRemoteSwiftPackageReference "ColorfulX" */,
+				DA5239052C9A0BDE00FD8B31 /* XCRemoteSwiftPackageReference "Brightroom" */,
 			);
 			productRefGroup = DA7D25792C7874F8008590B0 /* Products */;
 			projectDirPath = "";
@@ -174,12 +190,15 @@
 				DA8E67AA2C92C4F900AACC2C /* CustomPicker.swift in Sources */,
 				DA7D257E2C7874F8008590B0 /* ContentView.swift in Sources */,
 				DA7D258D2C7879F2008590B0 /* image-saver.swift in Sources */,
+				DA5239042C9A017E00FD8B31 /* ColorModification.swift in Sources */,
 				DA63B9762C7F1D56000E5714 /* EditView.swift in Sources */,
 				DA7D25902C7879F2008590B0 /* preview-image.swift in Sources */,
 				DA63B97B2C81081E000E5714 /* CustomPickerViewController.swift in Sources */,
+				DA112D8B2C99855C0026BB80 /* NegativesConverter.swift in Sources */,
 				DA7D258F2C7879F2008590B0 /* instagram-size.swift in Sources */,
 				DA7D25942C787CC5008590B0 /* multiple-image-picker.swift in Sources */,
 				DA7D257C2C7874F8008590B0 /* InstaFrameApp.swift in Sources */,
+				DA5239022C99FEEA00FD8B31 /* ColorModificationView.swift in Sources */,
 				DA7D258E2C7879F2008590B0 /* image-picker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -400,6 +419,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		DA5239052C9A0BDE00FD8B31 /* XCRemoteSwiftPackageReference "Brightroom" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/FluidGroup/Brightroom";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.10.1;
+			};
+		};
 		DA63B9772C810343000E5714 /* XCRemoteSwiftPackageReference "ColorfulX" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Lakr233/ColorfulX";
@@ -411,6 +438,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		DA5239062C9A0BDE00FD8B31 /* BrightroomEngine */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA5239052C9A0BDE00FD8B31 /* XCRemoteSwiftPackageReference "Brightroom" */;
+			productName = BrightroomEngine;
+		};
+		DA5239082C9A0BDE00FD8B31 /* BrightroomUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA5239052C9A0BDE00FD8B31 /* XCRemoteSwiftPackageReference "Brightroom" */;
+			productName = BrightroomUI;
+		};
 		DA63B9782C810343000E5714 /* ColorfulX */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DA63B9772C810343000E5714 /* XCRemoteSwiftPackageReference "ColorfulX" */;

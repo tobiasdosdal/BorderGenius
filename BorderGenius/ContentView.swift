@@ -47,29 +47,19 @@ struct ContentView: View {
                         .buttonStyle(.bordered)
                         .foregroundColor(.white)
                         .padding()
+                        
+                        NavigationLink(destination: NegativeConverterView()) {
+                            Label("Convert Negatives", systemImage: "camera.filters")
+                        }
+                        .buttonStyle(.bordered)
+                        .foregroundColor(.white)
+                        .padding()
                     }
                 } else {
                     EditView(imageAssets: $selectedImageAssets)
                 }
             }
-            //.navigationTitle("BorderGenius")
             .navigationBarTitleDisplayMode(.inline)
-//            .toolbar {
-//                ToolbarItem(placement: .principal) {
-//                    Text("BorderGenius")
-//                        .foregroundColor(.white)
-//                        .font(.largeTitle)
-//                }
-//                
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    Button(action: {
-//                        showingImagePicker = true
-//                    }) {
-//                        Image(systemName: "plus")
-//                    }
-//                    .foregroundColor(.white)
-//                }
-//            }
             .sheet(isPresented: $showingImagePicker) {
                 ImagePicker(assets: $selectedImageAssets)
             }

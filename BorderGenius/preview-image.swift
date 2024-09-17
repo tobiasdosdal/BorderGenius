@@ -56,10 +56,10 @@ struct PreviewImage: View {
         }
         .aspectRatio(aspectRatio.ratio, contentMode: .fit)
         .onAppear(perform: loadImage)
-        .onChange(of: borderColor) { _ in loadImage() }
-        .onChange(of: borderThickness) { _ in loadImage() }
-        .onChange(of: orientation) { _ in loadImage() }
-        .onChange(of: aspectRatio) { _ in loadImage() }
+        .onChange(of: borderColor) { _, _ in loadImage() }
+        .onChange(of: borderThickness) { _, _ in loadImage() }
+        .onChange(of: orientation) { _, _ in loadImage() }
+        .onChange(of: aspectRatio) { _, _ in loadImage() }
     }
     
     private func loadImage() {
