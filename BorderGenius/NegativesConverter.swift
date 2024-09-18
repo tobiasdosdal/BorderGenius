@@ -324,14 +324,9 @@ struct NegativeConverterView: View {
                     }
                     .disabled(convertedImage == nil)
                     
-                    Button(action: autoEditImage) {
-                        Text("Auto Edit")
-                            .padding()
-                            .background(convertedImage != nil ? Color.purple : Color.gray)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+                    Button("Enhance Colors") {
+                        applyEnhancedColorAdjustment()
                     }
-                    .disabled(convertedImage == nil)
                     
                     Button(action: saveImage) {
                         Text("Save")
@@ -368,6 +363,24 @@ struct NegativeConverterView: View {
                 }
             )
         }
+    }
+    
+    func applyEnhancedColorAdjustment() {
+        guard let currentImage = convertedImage,
+              let ciImage = CIImage(image: currentImage) else { return }
+        
+        let analyzer = EnhancedColorAnalyzer()
+        let analysis = analyzer.analyzeImage(ciImage)
+        
+        // Note that we're creating a new instance here
+        var enhancedModification = self.colorModification
+        enhancedModification.enhanceBasedOn(analysis)
+        
+        // Update the colorModification property
+        self.colorModification = enhancedModification
+        
+        // Apply the updated colorModification to your image
+        updatePreview()
     }
     
     private func loadImage(from asset: PHAsset) {
