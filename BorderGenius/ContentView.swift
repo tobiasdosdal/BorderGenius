@@ -34,22 +34,19 @@ struct ContentView: View {
                             .foregroundColor(.white)
                             .bold()
                             .font(.largeTitle)
-                            
-                        Text("No images selected")
-                            .foregroundColor(.white)
-                            .padding()
-                        
+                        HStack(spacing: 0) {
+                            Text("by tynd")
+                                .foregroundColor(.white)
+                                .font(.caption)
+                            Text("fed")
+                                .foregroundColor(.white)
+                                .bold()
+                                .font(.caption)
+                        }
                         Button(action: {
                             showingImagePicker = true
                         }) {
                             Label("Select Images", systemImage: "photo.on.rectangle.angled")
-                        }
-                        .buttonStyle(.bordered)
-                        .foregroundColor(.white)
-                        .padding()
-                        
-                        NavigationLink(destination: FilmProfileConverterView()) {
-                            Label("Convert Negatives", systemImage: "camera.filters")
                         }
                         .buttonStyle(.bordered)
                         .foregroundColor(.white)
@@ -61,7 +58,7 @@ struct ContentView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $showingImagePicker) {
-                ImagePicker(assets: $selectedImageAssets)
+                ImagePicker(assets: $selectedImageAssets, maxImages: 10)
             }
         }
         .accentColor(.white)

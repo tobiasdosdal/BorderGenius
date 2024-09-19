@@ -3,10 +3,11 @@ import PhotosUI
 
 struct ImagePicker: UIViewControllerRepresentable {
     @Binding var assets: [PHAsset]
+    let maxImages: Int
     
     func makeUIViewController(context: Context) -> PHPickerViewController {
         var config = PHPickerConfiguration(photoLibrary: .shared())
-        config.selectionLimit = 0  // 0 means no limit
+        config.selectionLimit = maxImages  // Set the maximum number of images
         config.filter = .images
         
         let picker = PHPickerViewController(configuration: config)

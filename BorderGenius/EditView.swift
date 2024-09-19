@@ -17,20 +17,32 @@ struct EditView: View {
     @State private var isLoading = false
     @State private var selectedAspectRatio: AspectRatio = .square
     @State private var isSaving = false
+    @State private var showingSaveConfirmation = false
     @Environment(\.presentationMode) var presentationMode
+    let maxImages = 10
     
     // ColorfulX properties
     @State var colors: [Color] = ColorfulPreset.neon.colors
     @AppStorage("speed") var speed: Double = 0.2
     @AppStorage("noise") var noise: Double = 5.0
     @AppStorage("duration") var duration: TimeInterval = 10.0
+    
+    let customColors: [Color] = [
+        Color(red: 0.0078, green: 0.3176, blue: 0.349), /* #025159 */
+        Color(red: 0.0157, green: 0.749, blue: 0.749), /* #04bfbf */
+        Color(red: 0.0118, green: 0.549, blue: 0.549), /* #038c8c */
+        Color(red: 0.749, green: 0.6039, blue: 0.4706), /* #bf9a78 */
+        Color(red: 0.549, green: 0.2706, blue: 0.1686) /* #8c452b */
+    ]
 
     var body: some View {
         NavigationView {
             ZStack {
                 ColorfulView(color: $colors, speed: $speed, noise: $noise)
                     .edgesIgnoringSafeArea(.all)
-                
+                    .onAppear {
+                        colors = customColors
+                    }
                 VStack {
                     if imageAssets.isEmpty {
                         Text("No images remaining")
@@ -85,21 +97,27 @@ struct EditView: View {
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
                 .navigationBarItems(
-                    trailing: Button(action: saveImagesToPhotos) {
+                    trailing: Button(action: { showingSaveConfirmation = true }) {
                         Image(systemName: "square.and.arrow.down")
                     }
                     .disabled(isSaving || imageAssets.isEmpty)
                 )
-                .alert(isPresented: $showingAlert) {
-                    Alert(
-                        title: Text("Save to Photos"),
-                        message: Text(alertMessage),
-                        dismissButton: .default(Text("OK")) {
-                            if imageAssets.isEmpty {
-                                presentationMode.wrappedValue.dismiss()
-                            }
+                .alert("Save Images", isPresented: $showingSaveConfirmation) {
+                    Button("Cancel", role: .cancel) { }
+                    Button("Save", role: .destructive) {
+                        saveImagesToPhotos()
+                    }
+                } message: {
+                    Text("Are you sure you want to save \(imageAssets.count) processed image(s) to your Photos library?")
+                }
+                .alert("Save Complete", isPresented: $showingAlert) {
+                    Button("OK") {
+                        if imageAssets.isEmpty {
+                            presentationMode.wrappedValue.dismiss()
                         }
-                    )
+                    }
+                } message: {
+                    Text(alertMessage)
                 }
             }
         }
@@ -146,7 +164,10 @@ struct EditView: View {
     }
     
     private func updateCurrentPreviewImage() {
-        updatePreviewImage(at: selectedImageIndex)
+        // Update all images in the background
+        for index in 0..<imageAssets.count {
+            updatePreviewImage(at: index)
+        }
     }
 
     private func updatePreviewImage(at index: Int) {
@@ -182,32 +203,32 @@ struct EditView: View {
     }
 
     private func saveImagesToPhotos() {
-        isSaving = true
-        PHPhotoLibrary.requestAuthorization { status in
-            if status == .authorized {
-                DispatchQueue.global(qos: .userInitiated).async {
-                    var savedCount = 0
-                    for (_, originalImage) in self.originalImages {
-                        let processedImage = self.processAndAddBorder(to: originalImage, color: UIColor(self.borderColor), thickness: self.borderThickness, aspectRatio: self.selectedAspectRatio)
-                        UIImageWriteToSavedPhotosAlbum(processedImage, nil, nil, nil)
-                        savedCount += 1
+            isSaving = true
+            PHPhotoLibrary.requestAuthorization { status in
+                if status == .authorized {
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        var savedCount = 0
+                        for (_, originalImage) in self.originalImages {
+                            let processedImage = self.processAndAddBorder(to: originalImage, color: UIColor(self.borderColor), thickness: self.borderThickness, aspectRatio: self.selectedAspectRatio)
+                            UIImageWriteToSavedPhotosAlbum(processedImage, nil, nil, nil)
+                            savedCount += 1
+                        }
+                        DispatchQueue.main.async {
+                            self.alertMessage = "\(savedCount) image(s) saved successfully to Photos library!"
+                            self.showingAlert = true
+                            self.isSaving = false
+                            self.clearPhotos()
+                        }
                     }
+                } else {
                     DispatchQueue.main.async {
-                        self.alertMessage = "\(savedCount) image(s) saved successfully to Photos library!"
+                        self.alertMessage = "Unable to access the Photos library. Please check your permissions in Settings."
                         self.showingAlert = true
                         self.isSaving = false
-                        self.clearPhotos()
                     }
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.alertMessage = "Unable to access the Photos library. Please check your permissions in Settings."
-                    self.showingAlert = true
-                    self.isSaving = false
                 }
             }
         }
-    }
     
     private func clearPhotos() {
         imageAssets.removeAll()
