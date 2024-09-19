@@ -20,7 +20,7 @@ class EnhancedColorAnalyzer {
         
         let featurePrint = featurePrintRequest.results?.first as? VNFeaturePrintObservation
         let saliency = saliencyRequest.results?.first as? VNSaliencyImageObservation
-        let classifications = classificationRequest.results as? [VNClassificationObservation]
+        let classifications = classificationRequest.results
         
         return EnhancedImageAnalysis(
             featurePrint: featurePrint,

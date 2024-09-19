@@ -12,6 +12,7 @@
 		DA5239042C9A017E00FD8B31 /* ColorModification.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5239032C9A017E00FD8B31 /* ColorModification.swift */; };
 		DA52390C2C9AD01D00FD8B31 /* GPUImage in Frameworks */ = {isa = PBXBuildFile; productRef = DA52390B2C9AD01D00FD8B31 /* GPUImage */; };
 		DA52390E2C9AD2EB00FD8B31 /* NaturalColorEnhancements.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA52390D2C9AD2EB00FD8B31 /* NaturalColorEnhancements.swift */; };
+		DA5239102C9B49B000FD8B31 /* ProfileCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA52390F2C9B49B000FD8B31 /* ProfileCard.swift */; };
 		DA63B9762C7F1D56000E5714 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA63B9752C7F1D56000E5714 /* EditView.swift */; };
 		DA63B9792C810343000E5714 /* ColorfulX in Frameworks */ = {isa = PBXBuildFile; productRef = DA63B9782C810343000E5714 /* ColorfulX */; };
 		DA63B97B2C81081E000E5714 /* CustomPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */; };
@@ -33,6 +34,7 @@
 		DA5239012C99FEEA00FD8B31 /* ColorModificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorModificationView.swift; sourceTree = "<group>"; };
 		DA5239032C9A017E00FD8B31 /* ColorModification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorModification.swift; sourceTree = "<group>"; };
 		DA52390D2C9AD2EB00FD8B31 /* NaturalColorEnhancements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaturalColorEnhancements.swift; sourceTree = "<group>"; };
+		DA52390F2C9B49B000FD8B31 /* ProfileCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCard.swift; sourceTree = "<group>"; };
 		DA63B9752C7F1D56000E5714 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPickerViewController.swift; sourceTree = "<group>"; };
 		DA7D25782C7874F8008590B0 /* BorderGenius.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BorderGenius.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,6 +96,7 @@
 				DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */,
 				DA8E67A92C92C4F900AACC2C /* CustomPicker.swift */,
 				DA112D8A2C99855C0026BB80 /* NegativesConverter.swift */,
+				DA52390F2C9B49B000FD8B31 /* ProfileCard.swift */,
 				DA5239012C99FEEA00FD8B31 /* ColorModificationView.swift */,
 				DA5239032C9A017E00FD8B31 /* ColorModification.swift */,
 				DA52390D2C9AD2EB00FD8B31 /* NaturalColorEnhancements.swift */,
@@ -192,6 +195,7 @@
 				DA7D258D2C7879F2008590B0 /* image-saver.swift in Sources */,
 				DA5239042C9A017E00FD8B31 /* ColorModification.swift in Sources */,
 				DA52390E2C9AD2EB00FD8B31 /* NaturalColorEnhancements.swift in Sources */,
+				DA5239102C9B49B000FD8B31 /* ProfileCard.swift in Sources */,
 				DA63B9762C7F1D56000E5714 /* EditView.swift in Sources */,
 				DA7D25902C7879F2008590B0 /* preview-image.swift in Sources */,
 				DA63B97B2C81081E000E5714 /* CustomPickerViewController.swift in Sources */,

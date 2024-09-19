@@ -48,7 +48,7 @@ struct ContentView: View {
                         .foregroundColor(.white)
                         .padding()
                         
-                        NavigationLink(destination: NegativeConverterView()) {
+                        NavigationLink(destination: FilmProfileConverterView()) {
                             Label("Convert Negatives", systemImage: "camera.filters")
                         }
                         .buttonStyle(.bordered)
