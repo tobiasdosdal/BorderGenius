@@ -70,7 +70,7 @@ struct EditView: View {
                             VStack {
                                 Text("Border Thickness: \(Int(borderThickness)) px")
                                     .foregroundStyle(Color(.white))
-                                Slider(value: $borderThickness, in: 0...300, step: 5)
+                                Slider(value: $borderThickness, in: 0...500, step: 10)
                             }
                         }
                         .padding()
