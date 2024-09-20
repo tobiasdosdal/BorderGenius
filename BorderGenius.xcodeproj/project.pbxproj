@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DA52390C2C9AD01D00FD8B31 /* GPUImage in Frameworks */ = {isa = PBXBuildFile; productRef = DA52390B2C9AD01D00FD8B31 /* GPUImage */; };
 		DA63B9762C7F1D56000E5714 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA63B9752C7F1D56000E5714 /* EditView.swift */; };
 		DA63B9792C810343000E5714 /* ColorfulX in Frameworks */ = {isa = PBXBuildFile; productRef = DA63B9782C810343000E5714 /* ColorfulX */; };
 		DA63B97B2C81081E000E5714 /* CustomPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */; };
@@ -46,7 +45,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA63B9792C810343000E5714 /* ColorfulX in Frameworks */,
-				DA52390C2C9AD01D00FD8B31 /* GPUImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,7 +113,6 @@
 			name = BorderGenius;
 			packageProductDependencies = (
 				DA63B9782C810343000E5714 /* ColorfulX */,
-				DA52390B2C9AD01D00FD8B31 /* GPUImage */,
 			);
 			productName = InstaFrame;
 			productReference = DA7D25782C7874F8008590B0 /* BorderGenius.app */;
@@ -147,7 +144,6 @@
 			mainGroup = DA7D256F2C7874F8008590B0;
 			packageReferences = (
 				DA63B9772C810343000E5714 /* XCRemoteSwiftPackageReference "ColorfulX" */,
-				DA52390A2C9AD01D00FD8B31 /* XCRemoteSwiftPackageReference "GPUImage3" */,
 			);
 			productRefGroup = DA7D25792C7874F8008590B0 /* Products */;
 			projectDirPath = "";
@@ -324,13 +320,15 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BorderGenius/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BorderGenius;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app needs permission to save the processed images to your photo library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs access to your photo library to save the processed images with borders.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -339,9 +337,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tyndfed.bordergenius;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -359,13 +361,15 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BorderGenius/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BorderGenius;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app needs permission to save the processed images to your photo library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs access to your photo library to save the processed images with borders.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -374,9 +378,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tyndfed.bordergenius;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -404,14 +412,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		DA52390A2C9AD01D00FD8B31 /* XCRemoteSwiftPackageReference "GPUImage3" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/BradLarson/GPUImage3";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		DA63B9772C810343000E5714 /* XCRemoteSwiftPackageReference "ColorfulX" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Lakr233/ColorfulX";
@@ -423,11 +423,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		DA52390B2C9AD01D00FD8B31 /* GPUImage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DA52390A2C9AD01D00FD8B31 /* XCRemoteSwiftPackageReference "GPUImage3" */;
-			productName = GPUImage;
-		};
 		DA63B9782C810343000E5714 /* ColorfulX */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DA63B9772C810343000E5714 /* XCRemoteSwiftPackageReference "ColorfulX" */;

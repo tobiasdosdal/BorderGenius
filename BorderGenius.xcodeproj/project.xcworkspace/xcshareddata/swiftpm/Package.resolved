@@ -1,5 +1,5 @@
 {
-  "originHash" : "24b49b35fb1c2f85b2837f479762fda6141665d564806ac310b0ea05b1e6789f",
+  "originHash" : "bafc68e4131ca832c8ece33d15761a7ae6eafc3583c4b957e8d7a4dbc4d5e5be",
   "pins" : [
     {
       "identity" : "colorfulx",
@@ -17,15 +17,6 @@
       "state" : {
         "revision" : "031ce6ce65c0b347fb192302aa8ec4a17cc1494f",
         "version" : "1.0.3"
-      }
-    },
-    {
-      "identity" : "gpuimage3",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/BradLarson/GPUImage3",
-      "state" : {
-        "branch" : "main",
-        "revision" : "84466fc344e1220238c1c07e94e91207caaabe51"
       }
     },
     {
