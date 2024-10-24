@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA1B056D2CCA326D00F428D4 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1B056C2CCA326D00F428D4 /* ImageCache.swift */; };
+		DA1B056F2CCA363C00F428D4 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1B056E2CCA363C00F428D4 /* ImageView.swift */; };
 		DA63B9762C7F1D56000E5714 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA63B9752C7F1D56000E5714 /* EditView.swift */; };
 		DA63B9792C810343000E5714 /* ColorfulX in Frameworks */ = {isa = PBXBuildFile; productRef = DA63B9782C810343000E5714 /* ColorfulX */; };
 		DA63B97B2C81081E000E5714 /* CustomPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */; };
@@ -23,6 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DA1B056C2CCA326D00F428D4 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		DA1B056E2CCA363C00F428D4 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		DA4010742C903A5A006F40D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DA63B9752C7F1D56000E5714 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPickerViewController.swift; sourceTree = "<group>"; };
@@ -83,6 +87,8 @@
 				DA7D25812C7874F9008590B0 /* Preview Content */,
 				DA63B97A2C81081E000E5714 /* CustomPickerViewController.swift */,
 				DA8E67A92C92C4F900AACC2C /* CustomPicker.swift */,
+				DA1B056C2CCA326D00F428D4 /* ImageCache.swift */,
+				DA1B056E2CCA363C00F428D4 /* ImageView.swift */,
 			);
 			path = BorderGenius;
 			sourceTree = "<group>";
@@ -171,6 +177,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA1B056F2CCA363C00F428D4 /* ImageView.swift in Sources */,
+				DA1B056D2CCA326D00F428D4 /* ImageCache.swift in Sources */,
 				DA8E67AA2C92C4F900AACC2C /* CustomPicker.swift in Sources */,
 				DA7D257E2C7874F8008590B0 /* ContentView.swift in Sources */,
 				DA7D258D2C7879F2008590B0 /* image-saver.swift in Sources */,

@@ -30,7 +30,7 @@ struct ContentView: View {
                     }
                 if selectedImageAssets.isEmpty {
                     VStack {
-                        Text("BorderGenius")
+                        Text("Border Genius")
                             .foregroundColor(.white)
                             .bold()
                             .font(.largeTitle)
