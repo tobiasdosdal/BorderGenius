@@ -27,18 +27,16 @@ struct EditView: View {
     @Environment(\.presentationMode) private var presentationMode
     
     // ColorfulX properties
-    @State private var colors: [Color] = ColorfulPreset.neon.colors
+    @State var colors: [Color] = [
+        Color(red: 0.0078, green: 0.3176, blue: 0.349),  /* #025159 */
+        Color(red: 0.0157, green: 0.749, blue: 0.749),   /* #04bfbf */
+        Color(red: 0.0118, green: 0.549, blue: 0.549),   /* #038c8c */
+        Color(red: 0.749, green: 0.6039, blue: 0.4706),  /* #bf9a78 */
+        Color(red: 0.549, green: 0.2706, blue: 0.1686)   /* #8c452b */
+    ]
     @AppStorage("speed") private var speed: Double = 0.2
     @AppStorage("noise") private var noise: Double = 5.0
     @AppStorage("duration") private var duration: TimeInterval = 10.0
-    
-    private let customColors: [Color] = [
-        Color(red: 0.0078, green: 0.3176, blue: 0.349),
-        Color(red: 0.0157, green: 0.749, blue: 0.749),
-        Color(red: 0.0118, green: 0.549, blue: 0.549),
-        Color(red: 0.749, green: 0.6039, blue: 0.4706),
-        Color(red: 0.549, green: 0.2706, blue: 0.1686)
-    ]
     
     // MARK: - Initialization
     init(imageAssets: Binding<[PHAsset]>) {
@@ -51,9 +49,6 @@ struct EditView: View {
             ZStack {
                 ColorfulView(color: $colors, speed: $speed, noise: $noise)
                     .edgesIgnoringSafeArea(.all)
-                    .onAppear {
-                        colors = customColors
-                    }
                 mainContent
             }
         }
